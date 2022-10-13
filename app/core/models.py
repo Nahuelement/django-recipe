@@ -19,9 +19,9 @@ class UserManager(BaseUserManager):
 
     """Manager for users."""
     def create_user(self, email, password=None, **extra_fields):
-        """Create, save and return a new user."""
+        """crear, guardar nuevo usuario."""
         if not email:
-            raise ValueError('User must have an email address.')
+            raise ValueError('Es necesario ingresar un mail .')
         user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password):
-        """Create and return a new superuser."""
+        """Crear y retornar nuevo usuario."""
         user = self.create_user(email, password)
         user.is_staff = True
         user.is_superuser = True
@@ -39,7 +39,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """User in the system."""
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -50,7 +49,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
 class Recipe(models.Model):
-    """Recipe object."""
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -69,7 +67,6 @@ class Recipe(models.Model):
         return self.title
 
 class Tag(models.Model):
-    """Tag for filtering recipes."""
     name = models.CharField(max_length=255)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -80,7 +77,6 @@ class Tag(models.Model):
         return self.name
 
 class Ingredient(models.Model):
-    """Ingredient for recipes."""
     name = models.CharField(max_length=255)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

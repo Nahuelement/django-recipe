@@ -8,7 +8,7 @@ from core.models import Recipe, Tag, Ingredient
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """Serializer for tags."""
+    """Serializer  tags."""
 
     class Meta:
         model = Tag
@@ -16,7 +16,7 @@ class TagSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """Serializer for ingredients."""
+    """Serializer  ingredients."""
 
     class Meta:
         model = Ingredient
@@ -25,7 +25,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    """Serializer for recipes."""
+    """Serializer  recipes."""
     tags = TagSerializer(many=True, required=False)
     ingredients = IngredientSerializer(many=True, required=False)
 
@@ -39,17 +39,17 @@ class RecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def _get_or_create_tags(self, tags, recipe):
-        """Handle getting or creating tags as needed."""
+        """tomar y crear los tags necesarios."""
         auth_user = self.context['request'].user
         for tag in tags:
-            tag_obj, created = Tag.objects.get_or_create(
+            tag_obj, created = Tag.objects.get_or_create( # tomar o crear
                 user=auth_user,
                 **tag,
             )
             recipe.tags.add(tag_obj)
 
     def _get_or_create_ingredients(self, ingredients, recipe):
-        """Handle getting or creating ingredients as needed."""
+        """Tomar y crear los ingredientes necesarios."""
         auth_user = self.context['request'].user
         for ingredient in ingredients:
             ingredient_obj, created = Ingredient.objects.get_or_create(
@@ -59,7 +59,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             recipe.ingredients.add(ingredient_obj)
 
     def create(self, validated_data):
-        """Create a recipe."""
+
         tags = validated_data.pop('tags', [])
         ingredients = validated_data.pop('ingredients', [])
         recipe = Recipe.objects.create(**validated_data)
@@ -70,7 +70,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        """Update recipe."""
+
         tags = validated_data.pop('tags', None)
         ingredients = validated_data.pop('ingredients', None)
 
@@ -90,13 +90,12 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeDetailSerializer(RecipeSerializer):
-    """Serializer for recipe detail view."""
+
 
     class Meta(RecipeSerializer.Meta):
         fields = RecipeSerializer.Meta.fields + ['description', 'image']
 
 class RecipeImageSerializer(serializers.ModelSerializer):
-    """Serializer for uploading images to recipes."""
 
     class Meta:
         model = Recipe

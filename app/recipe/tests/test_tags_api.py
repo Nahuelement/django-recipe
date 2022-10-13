@@ -16,17 +16,17 @@ from recipe.serializers import TagSerializer
 TAGS_URL = reverse('recipe:tag-list')
 
 def detail_url(tag_id):
-    """Create and return a tag detail url."""
+    """crear y retornar una URL de tags."""
     return reverse('recipe:tag-detail', args=[tag_id])
 
 
 def create_user(email='user@example.com', password='testpass123'):
-    """Create and return a user."""
+    """Creacion de usuario."""
     return get_user_model().objects.create_user(email=email, password=password)
 
 
 class PublicTagsApiTests(TestCase):
-    """Test unauthenticated API requests."""
+    """Test de no autorizacion Api."""
 
     def setUp(self):
         self.client = APIClient()
@@ -39,7 +39,7 @@ class PublicTagsApiTests(TestCase):
 
 
 class PrivateTagsApiTests(TestCase):
-    """Test authenticated API requests."""
+    """Test de autorizacion de la Api."""
 
     def setUp(self):
         self.user = create_user()
@@ -47,7 +47,7 @@ class PrivateTagsApiTests(TestCase):
         self.client.force_authenticate(self.user)
 
     def test_retrieve_tags(self):
-        """Test retrieving a list of tags."""
+        """Test  entrega de tags creados."""
         Tag.objects.create(user=self.user, name='Vegan')
         Tag.objects.create(user=self.user, name='Dessert')
 
@@ -59,7 +59,7 @@ class PrivateTagsApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_tags_limited_to_user(self):
-        """Test list of tags is limited to authenticated user."""
+        """Test listas de tags limitados a lo usuarios."""
         user2 = create_user(email='user2@example.com')
         Tag.objects.create(user=user2, name='Fruity')
         tag = Tag.objects.create(user=self.user, name='Comfort Food')
@@ -72,7 +72,7 @@ class PrivateTagsApiTests(TestCase):
         self.assertEqual(res.data[0]['id'], tag.id)
 
     def test_update_tag(self):
-        """Test updating a tag."""
+        """Test actulizacion de tags."""
         tag = Tag.objects.create(user=self.user, name='After Dinner')
 
         payload = {'name': 'Dessert'}
@@ -84,7 +84,7 @@ class PrivateTagsApiTests(TestCase):
         self.assertEqual(tag.name, payload['name'])
 
     def test_delete_tag(self):
-        """Test deleting a tag."""
+        """Test de eliminacion de tags."""
         tag = Tag.objects.create(user=self.user, name='Breakfast')
 
         url = detail_url(tag.id)
@@ -92,4 +92,3 @@ class PrivateTagsApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         tags = Tag.objects.filter(user=self.user)
-      
