@@ -2,7 +2,6 @@ version: "3.9"
 
 services:
   app:
-    image: nahuelement/django-recipe_app:v1
     build:
       context: .
     restart: always
@@ -29,7 +28,6 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS}
 
   proxy:
-    image: nahuelement/django-recipe_proxy:v1
     build:
       context: ./proxy
     restart: always
@@ -39,7 +37,7 @@ services:
       - 80:8000
     volumes:
       - static-data:/vol/static
-      
+
 volumes:
   postgres-data:
   static-data:
