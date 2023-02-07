@@ -34,6 +34,18 @@ services:
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: always
+    tty: true
+    stdin_open: true
+    hostname: rabbithost
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
 volumes:
   dev-db-data:
   dev-static-data:
