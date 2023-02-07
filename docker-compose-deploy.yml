@@ -37,7 +37,20 @@ services:
       - 80:8000
     volumes:
       - static-data:/vol/static
+      
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: always
+    tty: true
+    stdin_open: true
+    hostname: rabbithost
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
 
 volumes:
   postgres-data:
   static-data:
+  rabbitmq:
